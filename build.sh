@@ -6,8 +6,7 @@ BIN_DIR="$(pwd)"
 
 trap "cd '${ORIG_DIR}'" EXIT
 
-REPOSITORY=eoepca/demo
-TAG=0.1
+source ./container-info
 
 # eval $(minikube -p minikube docker-env)
 
