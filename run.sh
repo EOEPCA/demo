@@ -8,5 +8,7 @@ trap "cd '${ORIG_DIR}'" EXIT
 
 source ./container-info
 
-./build.sh && docker run --rm --name jupyter -it -p 8888:8888 ${REPOSITORY}:${TAG}
-# ./build.sh && docker run --rm --name jupyter -it -p 8888:8888 -v $PWD/demoroot:/home/jovyan/work ${REPOSITORY}:${TAG}
+VOLUME_MOUNT=
+if test "$1" = "dev"; then VOLUME_MOUNT="-v $PWD/demoroot:/home/jovyan/work"; fi
+
+./build.sh && docker run --rm --name jupyter -it -p 8888:8888 ${VOLUME_MOUNT} ${REPOSITORY}:${TAG}
