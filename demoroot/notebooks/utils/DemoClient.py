@@ -61,7 +61,7 @@ class DemoClient:
         """Wrapper for requests.session.request() to optionally include logging of the request details
         """
         if self.trace_requests:
-            print(f"Request: {method} => {url}")
+            print(f"[Request] {method} => {url}")
         return self.session.request(method, url, **kwargs)
 
     #---------------------------------------------------------------------------
