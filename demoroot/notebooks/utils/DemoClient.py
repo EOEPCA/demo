@@ -173,7 +173,6 @@ class DemoClient:
             access_token = r.json()["access_token"]
         except:
             return None
-        print(f"access_token: {access_token}")
         return access_token
 
     def get_access_token_from_password(self, username, password):
@@ -191,7 +190,6 @@ class DemoClient:
         }
         r = self.session.post(self.get_token_endpoint(), headers=headers, data=data)
         access_token = r.json()["access_token"]
-        print(f"access_token: {access_token}")
         return access_token
 
     def uma_http_request(self, requestor, url, headers=None, id_token=None, access_token=None, json=None, data=None):
@@ -262,8 +260,12 @@ class DemoClient:
         url = service_base_url + "/processes"
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request(self.session.get, url, headers=headers, id_token=id_token, access_token=access_token)
-        print(f"[Process List]=({r.status_code}-{r.reason})={r.text}")
-        return r, access_token
+        print(f"[Process List] = {r.status_code} ({r.reason})")
+        process_ids = []
+        if r.status_code == 200:
+            for process in r.json():
+                process_ids.append(process['id'])
+        return r, process_ids, access_token
 
     @keyword(name='Proc Deploy App')
     def proc_deploy_application(self, service_base_url, app_deploy_body_filename, id_token=None, access_token=None):
