@@ -115,7 +115,6 @@ class DemoClient:
         }
         r = self.session.post(self.get_token_endpoint(), headers=headers, data=data)
         id_token = r.json()["id_token"]
-        print(f"id_token: {id_token}")
         return id_token
 
     @keyword(name='Register Protected Resource')
