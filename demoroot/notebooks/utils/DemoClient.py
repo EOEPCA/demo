@@ -2,6 +2,8 @@ import requests
 import base64
 import os 
 import sys
+from time import sleep
+from datetime import datetime
 from urllib3.exceptions import InsecureRequestWarning
 import json
 from urllib.parse import urlparse
@@ -347,9 +349,6 @@ class DemoClient:
         url = service_base_url + "/processes/" + app_name + "/jobs"
         headers = { "Accept": "application/json", "Content-Type": "application/json", "Prefer": "respond-async" }
         r, access_token = self.uma_http_request("POST", url, headers=headers, id_token=id_token, access_token=access_token, json=app_execute_body)
-        print("zzzDebug: execute response = ", r)
-        print("zzzDebug: execute response headers = ", r.headers)
-        print("zzzDebug: execute response body = ", r.text)
         try:
             job_location = r.headers['Location']
         except:
@@ -364,17 +363,36 @@ class DemoClient:
         url = service_base_url + job_location
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
-        print(f"[Job Status] = {r.status_code} ({r.reason})")
-        return r, access_token
+        response_json = r.json()
+        status = response_json['status']
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(f"[Job Status] = {r.status_code} ({r.reason}) => {now} - {status}")
+        return r, access_token, status
 
+    @keyword(name='Proc Poll Job Completion')
+    def proc_poll_job_completion(self, service_base_url, job_location, interval=30, id_token=None, access_token=None):
+        """Call 'Get Job Status' in a loop until the job completes
+        """
+        status = "running"
+        while status == 'running':
+            r, access_token, status = self.proc_get_job_status(service_base_url, job_location, id_token=id_token, access_token=access_token)
+            if status != 'successful' and status != 'failed':
+                sleep(interval)
+            else:
+                break
+        return r, access_token, status
+
+    @keyword(name='Proc Job Result')
     def proc_get_job_result(self, service_base_url, job_location, id_token=None, access_token=None):
         """Get the job result from the supplied location
         """
         url = service_base_url + job_location + "/result"
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
-        print(f"[Job Result] = {r.status_code} ({r.reason})")
-        return r, access_token
+        inlineValue = r.json()['outputs'][0]['value']['inlineValue']
+        stacCatalogUri = json.loads(inlineValue)['StacCatalogUri']
+        print(f"[Job Result] = {r.status_code} ({r.reason}) => {stacCatalogUri}")
+        return r, access_token, stacCatalogUri
 
     @keyword(name='Proc Undeploy App')
     def proc_undeploy_application(self, service_base_url, app_name, id_token=None, access_token=None):
