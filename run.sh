@@ -9,6 +9,12 @@ trap "cd '${ORIG_DIR}'" EXIT
 source ./container-info
 
 VOLUME_MOUNT=
-if test "$1" = "dev"; then VOLUME_MOUNT="-v $PWD/demoroot:/home/jovyan/work"; fi
+# dev mode - use a mount for access to local files
+if test "$1" = "dev"; then
+  VOLUME_MOUNT="-v $PWD/demoroot:/home/jovyan/work"
+# otherwise - make a build to embed the content
+else
+  ./build.sh
+fi
 
-./build.sh && docker run --rm --name jupyter -it -p 8888:8888 ${VOLUME_MOUNT} ${REPOSITORY}:${TAG}
+docker run --rm --name jupyter -it -p 8888:8888 ${VOLUME_MOUNT} ${REPOSITORY}:${TAG}
