@@ -294,7 +294,7 @@ class DemoClient:
         if r.status_code == 200:
             for process in r.json():
                 process_ids.append(process['id'])
-        return r, process_ids, access_token
+        return r, access_token, process_ids
 
     @keyword(name='Proc Deploy App')
     def proc_deploy_application(self, service_base_url, app_deploy_body_filename, id_token=None, access_token=None):
@@ -374,12 +374,15 @@ class DemoClient:
         """Call 'Get Job Status' in a loop until the job completes
         """
         status = "running"
+        tr_before = self.trace_requests
+        self.trace_requests = False
         while status == 'running':
             r, access_token, status = self.proc_get_job_status(service_base_url, job_location, id_token=id_token, access_token=access_token)
             if status != 'successful' and status != 'failed':
                 sleep(interval)
             else:
                 break
+        self.trace_requests = tr_before
         return r, access_token, status
 
     @keyword(name='Proc Job Result')
