@@ -486,3 +486,13 @@ class DemoClient:
         res = self.http_request("GET", pep_resource_url +"/resources", headers=headers, verify=False)
         for k in json.loads(res.text):
             res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
+
+    @keyword(name='Workspace Get Details')
+    def workspace_get_details(self, service_base_url, workspace_name, id_token=None, access_token=None):
+        """Get details for the workspace with the supplied name
+        """
+        url = service_base_url + "/workspaces/" + workspace_name
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Workspace Details] = {r.status_code} ({r.reason})")
+        return r, access_token
