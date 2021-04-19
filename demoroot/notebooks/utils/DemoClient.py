@@ -385,6 +385,20 @@ class DemoClient:
         self.trace_requests = tr_before
         return r, access_token, status
 
+    @keyword(name='Proc List Jobs')
+    def proc_list_jobs(self, service_base_url, app_name, id_token=None, access_token=None):
+        """Get the job status from the supplied location
+        """
+        url = service_base_url + "/processes/" + app_name + "/jobs"
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Job List] = {r.status_code} ({r.reason})")
+        job_ids = []
+        if r.status_code == 200:
+            for job in r.json():
+                job_ids.append(job['id'])
+        return r, access_token, job_ids
+
     @keyword(name='Proc Job Result')
     def proc_get_job_result(self, service_base_url, job_location, id_token=None, access_token=None):
         """Get the job result from the supplied location
