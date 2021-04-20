@@ -45,7 +45,7 @@ def load_jupyter_server_extension(nb_app):
          (url_path_join(base_url, '/callback(.*)'), CallbackHandler),
          (url_path_join(base_url, '/callback.html(.*)'), CallbackHandler),
          (url_path_join("https://test.185.52.193.87.nip.io:443", '/callback.html'), CallbackHandler),
-         (url_path_join("http://localhost:8888/lab/callback.html", '/callback.html'), CallbackHandler),
+         (url_path_join("http://localhost:8888/lab/callback.html"), CallbackHandler),
          ]
     )
 

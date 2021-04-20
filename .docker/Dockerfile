@@ -14,6 +14,8 @@ COPY --chown=${NB_UID}:${NB_GID} demoroot .
 RUN pip install -U -r requirements.txt
 RUN jupyter serverextension enable --py --sys-prefix ipyauth.ipyauth_callback
 RUN jupyter nbextension install --py --symlink --sys-prefix ipyauth.ipyauth_widget
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN jupyter nbextension enable ipyauth.ipyauth_widget --py --sys-prefix
 RUN jupyter labextension link /ipyauth/ipyauth/js --no-build
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
+RUN jupyter lab build
 CMD [ "jupyter", "lab", "--NotebookApp.token=''" ]
