@@ -496,3 +496,12 @@ class DemoClient:
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
         print(f"[Workspace Details] = {r.status_code} ({r.reason})")
         return r, access_token
+
+    @keyword(name='Response Summary')
+    def response_summary(self, response, isJson=True):
+        print(f"STATUS = {response.status_code} {response.reason}")
+        print(f"HEADERS = {response.headers}")
+        if isJson:
+            print(f"BODY = {json.dumps(response.json(), indent = 2)}")
+        else:
+            print(f"BODY = {response.text}")
