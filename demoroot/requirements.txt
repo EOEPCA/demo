@@ -5,7 +5,7 @@ pycrypto==2.6.1
 pyjwkest==1.4.2
 robotframework==3.2.2
 WellKnownHandler==0.2.0
-OWSLib
+git+git://github.com/geopython/OWSLib@master#egg=OWSLib
 pyops
 git+git://github.com/edsu/opensearch@master#egg=opensearch
 folium
