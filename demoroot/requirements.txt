@@ -10,3 +10,4 @@ pyops
 git+git://github.com/edsu/opensearch@master#egg=opensearch
 folium
 geolinks
+bs4
