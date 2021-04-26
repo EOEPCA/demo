@@ -294,7 +294,7 @@ class DemoClient:
         if r.status_code == 200:
             for process in r.json():
                 process_ids.append(process['id'])
-        return r, process_ids, access_token
+        return r, access_token, process_ids
 
     @keyword(name='Proc Deploy App')
     def proc_deploy_application(self, service_base_url, app_deploy_body_filename, id_token=None, access_token=None):
@@ -374,13 +374,30 @@ class DemoClient:
         """Call 'Get Job Status' in a loop until the job completes
         """
         status = "running"
+        tr_before = self.trace_requests
+        self.trace_requests = False
         while status == 'running':
             r, access_token, status = self.proc_get_job_status(service_base_url, job_location, id_token=id_token, access_token=access_token)
             if status != 'successful' and status != 'failed':
                 sleep(interval)
             else:
                 break
+        self.trace_requests = tr_before
         return r, access_token, status
+
+    @keyword(name='Proc List Jobs')
+    def proc_list_jobs(self, service_base_url, app_name, id_token=None, access_token=None):
+        """Get the job status from the supplied location
+        """
+        url = service_base_url + "/processes/" + app_name + "/jobs"
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Job List] = {r.status_code} ({r.reason})")
+        job_ids = []
+        if r.status_code == 200:
+            for job in r.json():
+                job_ids.append(job['id'])
+        return r, access_token, job_ids
 
     @keyword(name='Proc Job Result')
     def proc_get_job_result(self, service_base_url, job_location, id_token=None, access_token=None):
@@ -469,3 +486,22 @@ class DemoClient:
         res = self.http_request("GET", pep_resource_url +"/resources", headers=headers, verify=False)
         for k in json.loads(res.text):
             res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
+
+    @keyword(name='Workspace Get Details')
+    def workspace_get_details(self, service_base_url, workspace_name, id_token=None, access_token=None):
+        """Get details for the workspace with the supplied name
+        """
+        url = service_base_url + "/workspaces/" + workspace_name
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Workspace Details] = {r.status_code} ({r.reason})")
+        return r, access_token
+
+    @keyword(name='Response Summary')
+    def response_summary(self, response, isJson=True):
+        print(f"STATUS = {response.status_code} {response.reason}")
+        print(f"HEADERS = {response.headers}")
+        if isJson:
+            print(f"BODY = {json.dumps(response.json(), indent = 2)}")
+        else:
+            print(f"BODY = {response.text}")
