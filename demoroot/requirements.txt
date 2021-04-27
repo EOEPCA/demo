@@ -10,3 +10,4 @@ git+git://github.com/EOFarm/pyops@master#egg=pyops
 folium
 geolinks
 bs4
+tifffile
