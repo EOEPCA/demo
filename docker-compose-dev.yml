@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  jupyterlab:
+    container_name: jupyterlab
+    hostname: jupyterlab
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eoepca/jupyterlab
+    ports:
+    - "8888:8888"
+    volumes:
+    - ${PWD}/demoroot:/home/jovyan/work
+    command: ["jupyter", "lab", "--NotebookApp.token=''" ]

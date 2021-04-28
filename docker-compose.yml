@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  jupyterlab:
+    container_name: jupyterlab
+    hostname: jupyterlab
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eoepca/jupyterlab
+    ports:
+    - "8888:8888"
+    command: ["jupyter", "lab", "--NotebookApp.token=''" ]
