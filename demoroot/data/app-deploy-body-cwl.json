@@ -6,7 +6,9 @@
         "format": {
           "mimeType": "application/cwl"
         },
-        "href": "https://raw.githubusercontent.com/EOEPCA/eoepca/develop/test/acceptance/02__Processing/01__ADES/data/application-package-cwl.cwl"
+        "value": {
+          "href": "https://app-packages.s3.fr-par.scw.cloud/nhi/app-nhi.dev.0.0.3.cwl"
+        }
       }
     }
   ],
@@ -21,6 +23,6 @@
       "transmissionMode": "value"
     }
   ],
-  "mode": "sync",
+  "mode": "auto",
   "response": "raw"
 }
