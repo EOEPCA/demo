@@ -24,6 +24,8 @@ The built container bundles the notebooks and supporting files.
 docker-compose up
 ```
 
+Open your browser at [http://0.0.0.0:8888](http://0.0.0.0:8888)
+
 ## develop
 
 Use the commandline arg to mount the local notebook files into the running container for local development...
