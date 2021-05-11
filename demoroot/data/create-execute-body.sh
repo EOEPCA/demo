@@ -12,4 +12,8 @@ if test -z "${INPUT_DATA_URL}"; then
   exit 1
 fi
 
+# Fix INPUT_DATA_URL for '&' char which has special meaning in sed regex
+printf -v INPUT_DATA_URL "%q" "${INPUT_DATA_URL}"
+
+# Substitute the Input Data URL into the template POST body
 sed -e "s|INPUT_DATA_URL|${INPUT_DATA_URL}|" app-execute-body-template.json > app-execute-body.json
