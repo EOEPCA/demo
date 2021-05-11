@@ -4,9 +4,11 @@
       "id": "applicationPackage",
       "input": {
         "format": {
-          "mimeType": "application/atom+xml"
+          "mimeType": "application/cwl"
         },
-        "href": "https://raw.githubusercontent.com/EOEPCA/eoepca/develop/test/acceptance/02__Processing/01__ADES/data/application-package-atom.xml"
+        "value": {
+          "href": "APPLICATION_PACKAGE_URL"
+        }
       }
     }
   ],
@@ -21,6 +23,6 @@
       "transmissionMode": "value"
     }
   ],
-  "mode": "sync",
+  "mode": "auto",
   "response": "raw"
 }
