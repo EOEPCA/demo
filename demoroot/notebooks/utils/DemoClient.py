@@ -363,8 +363,11 @@ class DemoClient:
         url = service_base_url + job_location
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
-        response_json = r.json()
-        status = response_json['status']
+        if r.status_code == 200:
+            response_json = r.json()
+            status = response_json['status']
+        else:
+            status = f"Unexpected ADES response: {r.status_code}/{r.reason}"
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         print(f"[Job Status] = {r.status_code} ({r.reason}) => {now} - {status}")
         return r, access_token, status
@@ -376,11 +379,24 @@ class DemoClient:
         status = "running"
         tr_before = self.trace_requests
         self.trace_requests = False
+        error_count = 0
+        max_error_count = 5
         while status == 'running':
             r, access_token, status = self.proc_get_job_status(service_base_url, job_location, id_token=id_token, access_token=access_token)
-            if status != 'successful' and status != 'failed':
-                sleep(interval)
+            # Expecting a 200 response
+            if r.status_code == 200:
+                error_count = 0
+                if status != 'successful' and status != 'failed':
+                    sleep(interval)
+                else:
+                    break
+            # Unexpected response, latch the error
             else:
+                error_count += 1
+                sleep(interval)
+            # Too many consecutive errors
+            if error_count > max_error_count:
+                print("ERROR: Too many failed attempts to get job status")
                 break
         self.trace_requests = tr_before
         return r, access_token, status
