@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/scipy-notebook:lab-3.0.14
 
 USER ${NB_USER}
 
