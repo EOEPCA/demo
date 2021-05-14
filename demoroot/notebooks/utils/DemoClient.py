@@ -521,3 +521,34 @@ class DemoClient:
             print(f"BODY = {json.dumps(response.json(), indent = 2)}")
         else:
             print(f"BODY = {response.text}")
+
+    @keyword(name='Reset Resource Policy')
+    def reset_resource_policy(self, resources_endpoint, pdp_endpoint, id_token, resource_name):
+        """Reset Resource Policy
+        Reset the named resource protection policy to include only the user identified
+        by the supplied token, using the supplied resource endpoint (PEP).
+        """
+        owner_id = self.get_ownership_id(id_token)
+        resource_id = self.get_resource_by_name(resources_endpoint, resource_name, id_token)
+        policy = {
+            "name": "Reset Policy",
+            "description": "reset policy",
+            "config": {
+                "resource_id": resource_id,
+                "action": "view",
+                "rules": [
+                    {
+                        "EQUAL": {
+                            "id": owner_id
+                        }
+                    }
+                ]
+            },
+            "scopes": [
+                "protected_access"
+            ]
+        }
+        tr = self.trace_requests
+        self.trace_requests = False
+        self.update_policy(pdp_endpoint, policy, resource_id, id_token)
+        self.trace_requests = tr
