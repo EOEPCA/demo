@@ -1,3 +1,3 @@
 
-REPOSITORY=eoepca/demo
-TAG=0.1
+REPOSITORY=eoepca/jupyterlab
+TAG=`date -u +%Y.%m.%d.%H.%M`

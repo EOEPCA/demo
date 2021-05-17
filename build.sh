@@ -10,7 +10,13 @@ source ./container-info
 
 # eval $(minikube -p minikube docker-env)
 
-docker build -f .docker/Dockerfile -t ${REPOSITORY}:${TAG} .
-docker tag ${REPOSITORY}:${TAG} ${REPOSITORY}:latest
+docker-compose build
+docker tag ${REPOSITORY}:latest ${REPOSITORY}:${TAG}
 
 # eval $(minikube -p minikube docker-env -u)
+
+echo -e "\nCreated docker image: ${REPOSITORY}:latest => ${REPOSITORY}:${TAG}\n"
+
+echo "Pushing images..."
+docker push ${REPOSITORY}:latest
+docker push ${REPOSITORY}:${TAG}
