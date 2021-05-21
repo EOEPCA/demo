@@ -484,7 +484,7 @@ class DemoClient:
             if name in k['_name']:
                 return k['_id']
 
-    @keyword(name='Get Resource By Name')
+    @keyword(name='Get Resource By URI')
     def get_resource_by_uri(self, pdp_base_url, relative_url, id_token):
         """Get Resource By Name
         Returns a resource_id matched by name
