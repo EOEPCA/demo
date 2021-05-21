@@ -484,6 +484,19 @@ class DemoClient:
             if name in k['_name']:
                 return k['_id']
 
+    @keyword(name='Get Resource By Name')
+    def get_resource_by_uri(self, pdp_base_url, relative_url, id_token):
+        """Get Resource By Name
+        Returns a resource_id matched by name
+        """
+        headers = { 'content-type': "application/x-www-form-urlencoded", "cache-control": "no-cache", "Authorization": "Bearer "+id_token}
+        res = requests.get( pdp_base_url +"/resources", headers=headers, verify=False)
+        for k in json.loads(res.text):
+            if relative_url == k['_reverse_match_url']:
+                return k['_id']
+
+
+
     @keyword(name='Clean State Resources')
     def clean_state_resources(self, pep_resource_url, id_token):
         """Clean State Resources
