@@ -536,13 +536,15 @@ class DemoClient:
             print(f"BODY = {response.text}")
 
     @keyword(name='Reset Resource Policy')
-    def reset_resource_policy(self, resources_endpoint, pdp_endpoint, id_token, resource_name):
+    def reset_resource_policy(self, resources_endpoint, pdp_endpoint, id_token, resource_uri):
         """Reset Resource Policy
-        Reset the named resource protection policy to include only the user identified
+        Reset the resource protection policy to include only the user identified
         by the supplied token, using the supplied resource endpoint (PEP).
+        The resource is identified by its URI.
         """
         owner_id = self.get_ownership_id(id_token)
-        resource_id = self.get_resource_by_name(resources_endpoint, resource_name, id_token)
+        #resource_id = self.get_resource_by_name(resources_endpoint, resource_name, id_token)
+        resource_id = self.get_resource_by_uri(resources_endpoint, resource_uri, id_token)
         policy = {
             "name": "Reset Policy",
             "description": "reset policy",
