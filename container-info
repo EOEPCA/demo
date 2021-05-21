@@ -1,3 +1,4 @@
 
 REPOSITORY=eoepca/jupyterlab
-TAG=`date -u +%Y.%m.%d.%H.%M`
+#TAG=`date -u +%Y.%m.%d.%H.%M`
+TAG="0.3.1"
