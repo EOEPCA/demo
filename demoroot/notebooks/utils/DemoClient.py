@@ -193,6 +193,7 @@ class DemoClient:
             self.trace(log_prefix, "Successfully exchanged ticket for RPT")
         except:
             self.trace(log_prefix, "ERROR - exchanging ticket for RPT")
+            self.response_summary(r, False)
             return None
         return access_token
 
@@ -237,6 +238,7 @@ class DemoClient:
             else:
                 self.trace(log_prefix, "No existing access token - making a naive attempt")
             # attempt access
+            self.trace(log_prefix, f"headers => {headers}")
             r = self.http_request(method, url, headers=headers, json=json, data=data)
             # if response is OK then nothing else to do
             if r.ok:
