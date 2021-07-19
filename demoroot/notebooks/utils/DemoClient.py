@@ -78,6 +78,7 @@ class DemoClient:
         if self.token_endpoint == None:
             headers = { 'content-type': "application/json" }
             r = self.http_request("GET", self.base_url + "/.well-known/uma2-configuration", headers=headers)
+            print(r)
             self.token_endpoint = r.json()["token_endpoint"]
             print(f"token_endpoint: {self.token_endpoint}")
         return self.token_endpoint
@@ -155,9 +156,18 @@ class DemoClient:
             headers = { 'content-type': "application/json", "Authorization": f"Bearer {id_token}" }
             data = { "resource_scopes":scopes, "icon_uri":uri, "name":name}
             r = self.http_request("POST", f"{resource_api_url}/resources", headers=headers, json=data)
-            
-            a= json.loads(r.text)
-            resource_id= a['id']
+
+            # Handle based-upon response code
+            if r.status_code == 200:
+                try:
+                    response_json = json.loads(r.text)
+                    resource_id= response_json['id']
+                except Exception as e:
+                    print(f"WARNING: registration of resource '{uri}' appears successful, but could not parse response body: {e}")
+            elif r.status_code == 422:
+                print(f"Resource '{uri}' is already registered")
+
+            # Persist the resource id
             if resource_id:
                 self.state["resources"][resource_api_url][uri] = resource_id
                 print(f"resource_id: {resource_id} @{resource_api_url} = {uri}")
@@ -193,7 +203,6 @@ class DemoClient:
             self.trace(log_prefix, "Successfully exchanged ticket for RPT")
         except:
             self.trace(log_prefix, "ERROR - exchanging ticket for RPT")
-            self.response_summary(r, False)
             return None
         return access_token
 
@@ -231,6 +240,8 @@ class DemoClient:
             # init headers if needed
             if headers is None:
                 headers = {}
+            # Set ID Token in header
+            headers["X-User-Id"] = id_token
             # use access token if we have one
             if access_token is not None:
                 self.trace(log_prefix, "Attempting to use existing access token")
@@ -238,7 +249,6 @@ class DemoClient:
             else:
                 self.trace(log_prefix, "No existing access token - making a naive attempt")
             # attempt access
-            self.trace(log_prefix, f"headers => {headers}")
             r = self.http_request(method, url, headers=headers, json=json, data=data)
             # if response is OK then nothing else to do
             if r.ok:
@@ -265,6 +275,36 @@ class DemoClient:
             else:
                 print(f"UNEXPECTED status code: {r.status_code} for resource {url}")
         # return the response and the access token which may be reusable
+        return r, access_token
+
+    #---------------------------------------------------------------------------
+    # Dummy Service
+    #---------------------------------------------------------------------------
+
+    @keyword(name='Dummy Service Call')
+    def dummy_service_call(self, service_base_url, id_token=None, access_token=None):
+        """Call the 'Dummy Service' endpoint
+        """
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", service_base_url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Dummy Service] = {r.status_code} ({r.reason})")
+        return r, access_token
+
+    #---------------------------------------------------------------------------
+    # Workspace API : Get Details
+    #---------------------------------------------------------------------------
+
+    @keyword(name='Workspace API Get Details')
+    def wsapi_get_details(self, service_base_url, id_token=None, access_token=None):
+        """Call the 'Workspace API Get Details' endpoint
+        """
+        headers = { "Accept": "application/json" }
+        r, access_token = self.uma_http_request("GET", service_base_url, headers=headers, id_token=id_token, access_token=access_token)
+        print(f"[Workspace API Get Details] = {r.status_code} ({r.reason})")
+        # process_ids = []
+        # if r.status_code == 200:
+        #     for process in r.json():
+        #         process_ids.append(process['id'])
         return r, access_token
 
     #---------------------------------------------------------------------------
