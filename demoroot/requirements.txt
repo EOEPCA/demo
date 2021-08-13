@@ -11,5 +11,6 @@ folium==0.12.1
 geolinks==0.2.0
 bs4==0.0.1
 pystac-client==0.2.0
+jsonschema==3.2.0
 tifffile==2021.4.8
 awscli==1.19.53
