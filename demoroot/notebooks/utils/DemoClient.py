@@ -636,7 +636,7 @@ class DemoClient:
             self.client = self.scim_client.registerClient(
                 "UM Demo Client",
                 grantTypes = ["client_credentials", "password", "urn:ietf:params:oauth:grant-type:uma-ticket"],
-                redirectURIs = ["http://localhost:8888/callback/"],
+                redirectURIs = ["https://test.demo.eoepca.org/oxauth/auth/passport/img/github.png"],
                 logoutURI = "",
                 responseTypes = ["code","token","id_token"],
                 scopes = ['openid',  'email', 'user_name ','uma_protection', 'permission', 'is_operator', 'profile'],
