@@ -343,7 +343,8 @@ class DemoClient:
             access_token=access_token,
             json=data,
         )
-        print(f"[Workspace Registration] = {r.status_code} ({r.reason})")
+        
+        print(f"[Workspace Registration] = {r.status_code} ({r.reason}) ({r.text}) ")
     
     #---------------------------------------------------------------------------
     # ADES WPS
