@@ -322,6 +322,29 @@ class DemoClient:
         #         process_ids.append(process['id'])
         return r, access_token
 
+    
+    @keyword(name="Workspace Registration")
+    def workspace_register(
+        self,
+        service_base_url,
+        workspace_name,
+        resource_url,
+        id_token=None,
+        access_token=None,
+    ):
+        url = service_base_url + "/workspaces/" + workspace_name + "/register"
+        headers = {"Accept": "application/json"}
+        data = {"type": "cwl", "url": resource_url}
+        r, access_token = self.uma_http_request(
+            "POST",
+            url,
+            headers=headers,
+            id_token=id_token,
+            access_token=access_token,
+            json=data,
+        )
+        print(f"[Workspace Registration] = {r.status_code} ({r.reason})")
+    
     #---------------------------------------------------------------------------
     # ADES WPS
     #---------------------------------------------------------------------------
