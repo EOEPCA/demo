@@ -97,7 +97,7 @@ class DemoClient:
                 redirectURIs = [""],
                 logoutURI = "",
                 responseTypes = ["code","token","id_token"],
-                scopes = ['openid',  'email', 'user_name ','uma_protection', 'permission'],
+                scopes = ['openid',  'email', 'user_name ','uma_protection', 'permission', 'is_operator'],
                 token_endpoint_auth_method = ENDPOINT_AUTH_CLIENT_POST)
             if self.client["client_id"] and self.client["client_secret"]:
                 self.state["client_id"] = self.client["client_id"]
@@ -108,6 +108,7 @@ class DemoClient:
         else:
             print(f"client_id: {self.state['client_id']} [REUSED]")
 
+    @keyword(name='Get Client Credentials')
     def get_client_credentials(self):
         """Returns the client credentials (client_id/secret)
 
@@ -136,7 +137,7 @@ class DemoClient:
         return id_token
 
     @keyword(name='Register Protected Resource')
-    def register_protected_resource(self, resource_api_url, uri, id_token, name, scopes):
+    def register_protected_resource(self, resource_api_url, uri, id_token, name, scopes, ownershipId=None):
         """Register a resource in the PEP
 
         Uses provided user ID token to authorise the request.
@@ -155,6 +156,8 @@ class DemoClient:
         if resource_id == None:
             headers = { 'content-type': "application/json", "Authorization": f"Bearer {id_token}" }
             data = { "resource_scopes":scopes, "icon_uri":uri, "name":name}
+            if ownershipId != None:
+                data["uuid"] = ownershipId
             r = self.http_request("POST", f"{resource_api_url}/resources", headers=headers, json=data)
 
             # Handle based-upon response code
@@ -450,7 +453,7 @@ class DemoClient:
         else:
             status = f"Unexpected ADES response: {r.status_code}/{r.reason}"
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        print(f"[Job Status] = {r.status_code} ({r.reason}) => {now} - {status}")
+        print(f"[Job Status] = {r.status_code} ({r.reason}) => {now} - {status} => {r.text}")
         return r, access_token, status
 
     @keyword(name='Proc Poll Job Completion')
@@ -520,7 +523,7 @@ class DemoClient:
         return r, access_token
 
     @keyword(name='Update Policy')
-    def update_policy(self, pdp_base_url, policy_cfg, resource_id, id_token=None, policy_id=None):
+    def update_policy(self, pdp_base_url, policy_cfg, resource_id, id_token=None, policy_id=None, action='get'):
         """Updates a policy
         If a Policy_ID is passed there will only be ownership comprobation
         """
@@ -531,14 +534,18 @@ class DemoClient:
         elif resource_id: 
             data={"resource_id": str(resource_id)}
             res = self.http_request("GET", pdp_base_url+"/policy/", headers=headers, json=data, verify=False)
-            policyId= json.loads(res.text)
-            for k in policyId['policies']:
-                policyId = k['_id']
-            res = self.http_request("PUT", pdp_base_url + "/policy/" + policyId, headers=headers, json=policy_cfg, verify=False)
+            policyIds= json.loads(res.text)
+            print(f"Policies: {policyIds['policies']}")
+
+            for k in policyIds['policies']:
+                if k['config']['resource_id'] == resource_id and k['config']['action'] == action:
+                    res = self.http_request("PUT", pdp_base_url + "/policy/" + k['_id'], headers=headers, json=policy_cfg, verify=False)
+                    print(k)
         else: res = None
         if res.status_code == 401:
             return 401, res.headers["Error"]
         if res.status_code == 200:
+            print(f"Json: {policy_cfg}")
             return 200, print(f"[Update Policy] = {res.status_code} ({res.reason})")
         return 500, print(f"[Update Policy] = {res.status_code} ({res.reason})")
     
@@ -555,23 +562,30 @@ class DemoClient:
         return jwt_decoded["sub"]
 
     @keyword(name='Get Resource By Name')
-    def get_resource_by_name(self, pdp_base_url, name, id_token):
+    def get_resource_by_name(self, pep_base_url, name, id_token):
         """Get Resource By Name
         Returns a resource_id matched by name
         """
         headers = { 'content-type': "application/x-www-form-urlencoded", "cache-control": "no-cache", "Authorization": "Bearer "+id_token}
-        res = requests.get( pdp_base_url +"/resources", headers=headers, verify=False)
+        res = requests.get( pep_base_url +"/resources", headers=headers, verify=False)
+        print(f"[URI] = {pep_base_url}/resources")
+        print(f"[Headers] = {headers}")
+        print(f"[Resource by URI] = {res.status_code} ({res.reason}) -> {res.text}")
+        print(f"[Name] = {name}")
         for k in json.loads(res.text):
             if name in k['_name']:
                 return k['_id']
 
     @keyword(name='Get Resource By URI')
-    def get_resource_by_uri(self, pdp_base_url, relative_url, id_token):
+    def get_resource_by_uri(self, pep_base_url, relative_url, id_token):
         """Get Resource By Name
         Returns a resource_id matched by name
         """
         headers = { 'content-type': "application/x-www-form-urlencoded", "cache-control": "no-cache", "Authorization": "Bearer "+id_token}
-        res = requests.get( pdp_base_url +"/resources", headers=headers, verify=False)
+        res = requests.get( pep_base_url +"/resources", headers=headers, verify=False)
+        print(f"[URI] = {pep_base_url}/resources")
+        print(f"[Headers] = {headers}")
+        print(f"[Resource by URI] = {res.status_code} ({res.reason}) -> {res.text}")
         for k in json.loads(res.text):
             if relative_url == k['_reverse_match_url']:
                 return k['_id']
@@ -588,15 +602,20 @@ class DemoClient:
             res = self.http_request("DELETE", pep_resource_url + "/resources/" + str(self.state["resources"][pep_resource_url][k]), headers=headers, verify=False)
 
     @keyword(name='Clean Owner Resources')
-    def clean_owner_resources(self, pep_resource_url, id_token):
+    def clean_owner_resources(self, pep_resource_url, id_token, name):
         """Clean Owner Resources
         Deletes from the database the list of resources matched by the ownership of the User identified
         """
         headers = { 'content-type': "application/x-www-form-urlencoded", "cache-control": "no-cache", "Authorization": "Bearer "+id_token}
         res = self.http_request("GET", pep_resource_url +"/resources", headers=headers, verify=False)
+        print(f"Response = {res.text}")
+        print(f"Url = {pep_resource_url}/resources")
         for k in json.loads(res.text):
-            res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
-
+            if k['_name'] == name:
+                print(f"Deleting {k['_name']} - {k['_reverse_match_url']}")
+                print(f"Url delete= {pep_resource_url}/resources/{k['_id']}")
+                res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
+                print(f"Response: {res.status_code} ({res.reason})")
     @keyword(name='Workspace Get Details')
     def workspace_get_details(self, service_base_url, workspace_name, id_token=None, access_token=None):
         """Get details for the workspace with the supplied name
@@ -617,15 +636,15 @@ class DemoClient:
             print(f"BODY = {response.text}")
 
     @keyword(name='Reset Resource Policy')
-    def reset_resource_policy(self, resources_endpoint, pdp_endpoint, id_token, resource_uri):
+    def reset_resource_policy(self, resources_endpoint, pdp_endpoint, id_token, resource_name):
         """Reset Resource Policy
         Reset the resource protection policy to include only the user identified
         by the supplied token, using the supplied resource endpoint (PEP).
         The resource is identified by its URI.
         """
         owner_id = self.get_ownership_id(id_token)
-        #resource_id = self.get_resource_by_name(resources_endpoint, resource_name, id_token)
-        resource_id = self.get_resource_by_uri(resources_endpoint, resource_uri, id_token)
+        resource_id = self.get_resource_by_name(resources_endpoint, resource_name, id_token)
+        #resource_id = self.get_resource_by_uri(resources_endpoint, resource_uri, id_token)
         policy = {
             "name": "Reset Policy",
             "description": "reset policy",
