@@ -98,6 +98,7 @@ class DemoClient:
                 logoutURI = "",
                 responseTypes = ["code","token","id_token"],
                 scopes = ['openid',  'email', 'user_name ','uma_protection', 'permission', 'is_operator', 'profile'],
+                subject_type = "public",
                 token_endpoint_auth_method = ENDPOINT_AUTH_CLIENT_POST)
             if self.client["client_id"] and self.client["client_secret"]:
                 self.state["client_id"] = self.client["client_id"]
