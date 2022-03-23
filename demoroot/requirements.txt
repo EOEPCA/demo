@@ -1,5 +1,5 @@
 boto3==1.17.53
-eoepca-scim==2.7.4
+eoepca-scim==2.8.1
 lxml==4.6.3
 pycrypto==2.6.1
 pyjwkest==1.4.2
