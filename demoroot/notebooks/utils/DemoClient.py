@@ -349,7 +349,8 @@ class DemoClient:
         print(f"[Process List] = {r.status_code} ({r.reason})")
         process_ids = []
         if r.status_code == 200:
-            for process in r.json():
+            print(r.json())
+            for process in r.json()["processes"]:
                 process_ids.append(process['id'])
         return r, access_token, process_ids
 
@@ -403,7 +404,7 @@ class DemoClient:
         except json.decoder.JSONDecodeError:
             print(f"ERROR loading application execute details from file: {app_execute_body_filename}")
         # make request
-        url = service_base_url + "/processes/" + app_name + "/jobs"
+        url = service_base_url + "/processes/" + app_name + "/execution"
         headers = { "Accept": "application/json", "Content-Type": "application/json", "Prefer": "respond-async" }
         r, access_token = self.uma_http_request("POST", url, headers=headers, id_token=id_token, access_token=access_token, json=app_execute_body)
         try:
@@ -462,26 +463,25 @@ class DemoClient:
     def proc_list_jobs(self, service_base_url, app_name, id_token=None, access_token=None):
         """Get the job status from the supplied location
         """
-        url = service_base_url + "/processes/" + app_name + "/jobs"
+        url = service_base_url + "/jobs"
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
         print(f"[Job List] = {r.status_code} ({r.reason})")
         job_ids = []
         if r.status_code == 200:
-            for job in r.json():
-                job_ids.append(job['id'])
+            for job in r.json()["jobs"]:
+                job_ids.append(job['jobID'])
         return r, access_token, job_ids
 
     @keyword(name='Proc Job Result')
     def proc_get_job_result(self, service_base_url, job_location, id_token=None, access_token=None):
         """Get the job result from the supplied location
         """
-        url = service_base_url + job_location + "/result"
+        url = service_base_url + job_location + "/results"
         headers = { "Accept": "application/json" }
         r, access_token = self.uma_http_request("GET", url, headers=headers, id_token=id_token, access_token=access_token)
-        inlineValue = r.json()['outputs'][0]['value']['inlineValue']
-        stacCatalogUri = json.loads(inlineValue)['StacCatalogUri']
-        print(f"[Job Result] = {r.status_code} ({r.reason}) => {stacCatalogUri}")
+        stacCatalogUri = r.json()['wf_outputs']['value']['StacCatalogUri']
+        #print(f"[Job Result] = {r.status_code} ({r.reason}) => {stacCatalogUri}")
         return r, access_token, stacCatalogUri
 
     @keyword(name='Proc Undeploy App')
