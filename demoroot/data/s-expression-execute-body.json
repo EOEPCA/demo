@@ -4,6 +4,6 @@
         "cbn": "ndvi",
         "s_expression": "(/ (- nir red) (+ nir red))"
     },
-    "response":"document"
+    "response":"raw"
     
 }
