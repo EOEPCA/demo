@@ -1,44 +1,8 @@
 {
-    "inputs": [
-        {
-            "id": "input_reference",
-            "input": {
-                "format": {
-                    "mimeType": "application/json"
-                },
-                "href": "https://resource-catalogue.demo.eoepca.org/csw/?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&recordids=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFH_20200902T113910.SAFE"
-            }
-        },
-        {
-            "id": "cbn",
-            "input": {
-                "dataType": {
-                    "name": "string"
-                },
-                "value": "ndvi"
-            }
-        },
-        {
-            "id": "s_expression",
-            "input": {
-                "dataType": {
-                    "name": "string"
-                },
-                "value": "(/ (- nir red) (+ nir red))"
-            }
-        }
-    ],
-    "outputs": [
-        {
-            "format": {
-                "mimeType": "string",
-                "schema": "string",
-                "encoding": "string"
-            },
-            "id": "wf_outputs",
-            "transmissionMode": "value"
-        }
-    ],
-    "mode": "auto",
-    "response": "raw"
+    "inputs": {
+        "input_reference":  "https://resource-catalogue.demo.eoepca.org/csw/?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&recordids=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFH_20200902T113910.SAFE",
+        "cbn": "ndvi",
+        "s_expression": "(/ (- nir red) (+ nir red))"
+    },
+    "response":"raw"
 }

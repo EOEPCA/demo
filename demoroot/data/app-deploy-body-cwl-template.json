@@ -1,28 +1,6 @@
 {
-  "inputs": [
-    {
-      "id": "applicationPackage",
-      "input": {
-        "format": {
-          "mimeType": "application/cwl"
-        },
-        "value": {
-          "href": "APPLICATION_PACKAGE_URL"
-        }
-      }
-    }
-  ],
-  "outputs": [
-    {
-      "format": {
-        "mimeType": "string",
-        "schema": "string",
-        "encoding": "string"
-      },
-      "id": "deployResult",
-      "transmissionMode": "value"
-    }
-  ],
-  "mode": "auto",
-  "response": "raw"
+  "executionUnit": {
+    "href": "APPLICATION_PACKAGE_URL",
+    "type": "application/cwl"
+  }
 }
