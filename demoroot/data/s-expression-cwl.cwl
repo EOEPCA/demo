@@ -67,6 +67,23 @@ $graph:
 $namespaces:
   s: https://schema.org/
 cwlVersion: v1.0
+s:version: 0.0.2
 s:softwareVersion: 0.0.2
+s:citation: https://github.com/EOEPCA/app-s-expression#readme
+s:codeRepository: https://github.com/EOEPCA/app-s-expression
+s:dateCreated: "2022-05-03"
+s:keywords: "s-expression, processing, EO, bands"
+s:license: https://raw.githubusercontent.com/EOEPCA/eoepca/develop/LICENSE
+s:releaseNotes: https://raw.githubusercontent.com/EOEPCA/app-s-expression/main/README.md
+s:author:
+  - class: s:Person
+    s:name: Eoepca Developer
+    s:email: developer@eoepca.org
+    s:affiliation: EOEPCA
+s:contributor:
+  - class: s:Person
+    s:name: Community Developer
+    s:email: s:contributor@community.org
+    s:affiliation: Community
 schemas:
 - http://schema.org/version/9.0/schemaorg-current-http.rdf
