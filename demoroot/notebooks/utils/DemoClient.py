@@ -327,18 +327,18 @@ class DemoClient:
         return r, access_token
 
     
-    @keyword(name="Workspace Registration")
-    def workspace_register(
+    @keyword(name="Workspace Application Registration")
+    def workspace_register_application(
         self,
         service_base_url,
         workspace_name,
-        resource_url,
+        application_url,
         id_token=None,
         access_token=None,
     ):
         url = service_base_url + "/workspaces/" + workspace_name + "/register"
         headers = {"Accept": "application/json"}
-        data = {"type": "cwl", "url": resource_url}
+        data = {"type": "application", "url": application_url}
         r, access_token = self.uma_http_request(
             "POST",
             url,
@@ -348,7 +348,7 @@ class DemoClient:
             json=data,
         )
         
-        print(f"[Workspace Registration] = {r.status_code} ({r.reason}) ({r.text}) ")
+        print(f"[Workspace Application Registration] = {r.status_code} ({r.reason}) ({r.text}) ")
     
     #---------------------------------------------------------------------------
     # ADES WPS
@@ -377,7 +377,6 @@ class DemoClient:
         print(f"[Process List] = {r.status_code} ({r.reason})")
         process_ids = []
         if r.status_code == 200:
-            print(r.json())
             for process in r.json()["processes"]:
                 process_ids.append(process['id'])
         return r, access_token, process_ids
@@ -615,8 +614,8 @@ class DemoClient:
             if k['_name'] == name:
                 print(f"Deleting {k['_name']} - {k['_reverse_match_url']}")
                 print(f"Url delete= {pep_resource_url}/resources/{k['_id']}")
-            res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
-            print(f"Response: {res.status_code} ({res.reason})")
+                res = self.http_request("DELETE", pep_resource_url + "/resources/" + k['_id'], headers=headers, verify=False)
+                print(f"Response: {res.status_code} ({res.reason})")
     @keyword(name='Workspace Get Details')
     def workspace_get_details(self, service_base_url, workspace_name, id_token=None, access_token=None):
         """Get details for the workspace with the supplied name
