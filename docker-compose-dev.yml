@@ -12,6 +12,8 @@ services:
     - "8888:8888"
     volumes:
     - ${PWD}/demoroot:/home/${PUSER}/work
+    - ${PWD}/kubeconfig:/home/${PUSER}/.kube/config
+    - ${DEPLOYMENT_GUIDE_ROOT}:/home/${PUSER}/deployment-guide
     # START (make permissions work)
     environment:
       NB_USER: "${PUSER}"
