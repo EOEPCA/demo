@@ -11,12 +11,13 @@ RUN apt-get update && \
 # Use the built-in user
 USER ${NB_USER}
 
+# Move to the work dir
+WORKDIR ${HOME}/work
+
 # Install the python requirements in an early layer,
 # since it shouldn't change that often and takes a while to execute.
-WORKDIR ${HOME}/work/demoroot
 COPY --chown=${NB_UID}:${NB_GID} demoroot/requirements.txt .
 RUN pip install -U -r requirements.txt
 
 # Copy across the demo files
-WORKDIR ${HOME}/work
 COPY --chown=${NB_UID}:${NB_GID} demoroot .
