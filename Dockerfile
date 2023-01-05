@@ -17,7 +17,7 @@ WORKDIR ${HOME}/work
 # Install the python requirements in an early layer,
 # since it shouldn't change that often and takes a while to execute.
 COPY --chown=${NB_UID}:${NB_GID} demoroot/requirements.txt .
-RUN pip install -U -r requirements.txt
+RUN pip install --no-cache-dir -U -r requirements.txt
 
 # Copy across the demo files
 COPY --chown=${NB_UID}:${NB_GID} demoroot .
