@@ -7,7 +7,7 @@ geolinks==0.2.0
 ipyleaflet==0.17.1
 jsonschema==3.2.0
 lxml==4.6.3
-OWSLib @ git+https://github.com/geopython/OWSLib@f5e659c42e91c6301d82805e06e546803706e486
+OWSLib==0.29.0
 pycrypto==2.6.1
 pyjwkest==1.4.2
 pystac-client==0.5.1
