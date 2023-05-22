@@ -251,7 +251,9 @@ class DemoKeycloakClient:
             "client_id": self.resources_client.get('clientId'),
             "client_secret": self.resources_client.get('secret')
         }
-        params_path = {"realm-name": self.realm}
+        params_path = {
+            "realm-name": self.realm
+        }
         connection = ConnectionManager(self.keycloak_uma.connection.base_url)
         connection.add_param_headers("Content-Type", "application/x-www-form-urlencoded")
         data = connection.raw_post(urls_patterns.URL_TOKEN.format(**params_path), data=payload)
