@@ -1,7 +1,11 @@
 import json
+from typing import Iterable
+
 import requests
-from keycloak import KeycloakOpenID, KeycloakOpenIDConnection, KeycloakAdmin, KeycloakUMA, ConnectionManager
+from keycloak import KeycloakOpenID, KeycloakOpenIDConnection, KeycloakAdmin, KeycloakUMA, ConnectionManager, \
+    urls_patterns
 from keycloak.exceptions import raise_error_from_response, KeycloakGetError, KeycloakPostError
+from keycloak.uma_permissions import UMAPermission
 from robot.api.deco import library
 from urllib3.exceptions import InsecureRequestWarning
 
@@ -40,10 +44,10 @@ class DemoKeycloakClient:
             client_secret_key=self.admin_client.get('secret'),
             verify=True)
         self.keycloak_admin = KeycloakAdmin(connection=openid_connection)
-        self.keycloak_openid = KeycloakOpenID(server_url=server_url,
-                                              realm_name=realm,
-                                              client_id=self.admin_client.get('clientId'),
-                                              client_secret_key=self.admin_client.get('secret'))
+        self.keycloak_admin_openid = KeycloakOpenID(server_url=server_url,
+                                                    realm_name=realm,
+                                                    client_id=self.admin_client.get('clientId'),
+                                                    client_secret_key=self.admin_client.get('secret'))
         self.keycloak_uma = KeycloakUMA(connection=KeycloakOpenIDConnection(
             server_url=server_url,
             realm_name=realm,
@@ -52,6 +56,10 @@ class DemoKeycloakClient:
             client_id=self.resources_client.get('clientId'),
             client_secret_key=self.resources_client.get('secret'),
             verify=True))
+        self.keycloak_uma_openid = KeycloakOpenID(server_url=server_url,
+                                                  realm_name=realm,
+                                                  client_id=self.resources_client.get('clientId'),
+                                                  client_secret_key=self.resources_client.get('secret'))
 
     def register_resources(self):
         client_id = self.resources_client.get('id')
@@ -125,9 +133,9 @@ class DemoKeycloakClient:
             print("Creating policy:\n" + json.dumps(policy, indent=2))
             response = self.keycloak_admin.create_client_authz_role_based_policy(client_id=client_id, payload=policy,
                                                                                  skip_exists=True)
-            print("\nResponse: " + str(response))
+            print("Response: " + str(response))
 
-    def assign_resource_permissions(self):
+    def assign_resources_permissions(self):
         client_id = self.resources_client.get('id')
         resources_permissions = [
             {
@@ -196,33 +204,58 @@ class DemoKeycloakClient:
             self.register_client()
         return self.state["client_id"], self.state["client_secret"]
 
-    def get_user_token(self, username, password):
+    def get_user_token(self, username, password, openid):
         """Gets a user token using username/password authentication.
         """
-        return self.keycloak_openid.token(username, password, scope="profile")
+        return openid.token(username, password, scope="openid profile")
 
-    def generate_pat(self):
+    def generate_protection_pat(self):
         """Generate a personal access token
         """
-        params_path = {
-            "realm-name": "demo"
-        }
         payload = {
             "grant_type": "client_credentials",
-            "client_id": "demo",
-            "client_secret": "secret"
+            "client_id": self.resources_client.get('clientId'),
+            "client_secret": self.resources_client.get('secret'),
         }
         connection = ConnectionManager(self.keycloak_uma.connection.base_url)
         connection.add_param_headers("Content-Type", "application/x-www-form-urlencoded")
         data_raw = connection.raw_post(self.keycloak_uma.uma_well_known["token_endpoint"], data=payload)
         return raise_error_from_response(data_raw, KeycloakPostError)
 
-    def get_resource_id_from_name(self, resource_name):
+    def get_resource_id_from_name(self, name) -> [str]:
         """Gets a resource id from name
         """
-        data_raw = self.keycloak_admin.connection.raw_get(
-            self.server_url + '/realms/' + self.realm + '/authz/protection/resource_set?name=' + resource_name)
-        return raise_error_from_response(data_raw, KeycloakGetError)
+        return self.keycloak_uma.resource_set_list_ids(name=name, exact_name=True)
+
+    def get_resource_id_from_uri(self, uri) -> [str]:
+        """Gets a resource id from uri
+        """
+        return self.keycloak_uma.resource_set_list_ids(uri=uri, exact_name=True)
+
+    def create_permission_ticket(self, resources: [str]):
+        payload = [
+            {"resource_id": resource} for resource in resources
+        ]
+        data = self.keycloak_uma.connection.raw_post(
+            f"https://keycloak.develop.eoepca.org/realms/{self.realm}/authz/protection/permission",
+            data=json.dumps(payload)
+        )
+        return raise_error_from_response(data, KeycloakPostError)
+
+    def get_uma_token(self, access_token, ticket):
+        payload = {
+            "claim_token_format": "http://openid.net/specs/openid-connect-core-1_0.html#IDToken",
+            "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+            "claim_token": access_token,
+            "ticket": ticket,
+            "client_id": self.resources_client.get('clientId'),
+            "client_secret": self.resources_client.get('secret')
+        }
+        params_path = {"realm-name": self.realm}
+        connection = ConnectionManager(self.keycloak_uma.connection.base_url)
+        connection.add_param_headers("Content-Type", "application/x-www-form-urlencoded")
+        data = connection.raw_post(urls_patterns.URL_TOKEN.format(**params_path), data=payload)
+        return raise_error_from_response(data, KeycloakPostError)
 
     def get_user_id(self, username) -> str:
         return self.keycloak_admin.get_user_id(username)
@@ -265,6 +298,7 @@ class DemoKeycloakClient:
     def __create_resources_client(self):
         payload = {
             'clientId': 'resources-demo',
+            'secret': 'secret',
             'serviceAccountsEnabled': True,
             'directAccessGrantsEnabled': True,
             'authorizationServicesEnabled': True,
