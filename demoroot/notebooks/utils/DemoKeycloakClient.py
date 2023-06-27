@@ -68,7 +68,7 @@ class DemoKeycloakClient:
             print('Response: ' + str(response))
 
     def __register_policy(self, policy, register_f):
-        client_id = self.resources_client.get('id')
+        client_id = self.admin_client.get('id')
         print("Creating policy:\n" + json.dumps(policy, indent=2))
         response = register_f(client_id=client_id, payload=policy, skip_exists=True)
         print("Response: " + str(response))
@@ -76,13 +76,10 @@ class DemoKeycloakClient:
     def __register_policy_send_post(self, policy_type, client_id, payload, skip_exists):
         params_path = {"realm-name": self.realm, "id": client_id}
         url = urls_patterns.URL_ADMIN_CLIENT_AUTHZ + "/policy/" + policy_type + "?max=-1"
-        data_raw = self.keycloak_uma_openid.connection.raw_post(url.format(**params_path), data=json.dumps(payload))
+        data_raw = self.keycloak_admin.connection.raw_post(url.format(**params_path), data=json.dumps(payload))
         return raise_error_from_response(
             data_raw, KeycloakPostError, expected_codes=[201], skip_exists=skip_exists
         )
-
-    def __register_aggregated_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("aggregate", client_id, payload, skip_exists)
 
     def register_aggregated_policy(self, name, policies, strategy):
         # strategy: UNANIMOUS | AFFIRMATIVE | CONSENSUS
@@ -96,19 +93,13 @@ class DemoKeycloakClient:
             "policies": policies,
             "description": ""
         }
-        self.__register_policy(policy, self.__register_aggregated_policy)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("aggregate", client_id, payload, skip_exists))
 
     def register_client_policy(self, policy):
         self.__register_policy(policy, self.keycloak_admin.create_client_authz_client_policy)
 
-    def __register_client_scope_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("client-scope", client_id, payload, skip_exists)
-
     def register_client_scope_policy(self, policy):
-        self.__register_policy(policy, self.__register_client_scope_policy)
-
-    def __register_group_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("group", client_id, payload, skip_exists)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("client-scope", client_id, payload, skip_exists))
 
     def register_group_policy(self, name, groups, groups_claim):
         # groups: [{"id": str, "path": str}]
@@ -121,10 +112,7 @@ class DemoKeycloakClient:
             "groupsClaim": groups_claim,
             "description": ""
         }
-        self.__register_policy(policy, self.__register_group_policy)
-
-    def __register_regex_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("regex", client_id, payload, skip_exists)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("group", client_id, payload, skip_exists))
 
     def register_regex_policy(self, name, regex, target_claim):
         policy = {
@@ -136,7 +124,7 @@ class DemoKeycloakClient:
             "targetClaim": target_claim,
             "description": ""
         }
-        self.__register_policy(policy, self.__register_regex_policy)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("regex", client_id, payload, skip_exists))
 
     def register_role_policy(self, name, roles):
         if not isinstance(roles, list):
@@ -154,9 +142,6 @@ class DemoKeycloakClient:
             ]
         }
         self.__register_policy(policy, self.keycloak_admin.create_client_authz_role_based_policy)
-
-    def __register_time_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("time", client_id, payload, skip_exists)
 
     def register_time_policy(self, name, time):
         # time can be one of:
@@ -180,10 +165,7 @@ class DemoKeycloakClient:
             "description": ""
         }
         policy.update(time)
-        self.__register_policy(policy, self.__register_time_policy)
-
-    def __register_user_policy(self, client_id, payload, skip_exists):
-        self.__register_policy_send_post("user", client_id, payload, skip_exists)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("time", client_id, payload, skip_exists))
 
     def register_user_policy(self, name, users):
         if not isinstance(users, list):
@@ -196,7 +178,7 @@ class DemoKeycloakClient:
             "users": users,
             "description": ""
         }
-        self.__register_policy(policy, self.__register_user_policy)
+        self.__register_policy(policy, lambda client_id, payload, skip_exists: self.__register_policy_send_post("user", client_id, payload, skip_exists))
 
     def assign_resources_permissions(self, permissions):
         if not isinstance(permissions, list):
