@@ -68,7 +68,7 @@ class DemoKeycloakClient:
             print('Response: ' + str(response))
 
     def __register_policy(self, policy, register_f):
-        client_id = self.admin_client.get('id')
+        client_id = self.resources_client.get('id')
         print("Creating policy:\n" + json.dumps(policy, indent=2))
         response = register_f(client_id=client_id, payload=policy, skip_exists=True)
         print("Response: " + str(response))
@@ -137,7 +137,7 @@ class DemoKeycloakClient:
             "roles": [
                 {
                     "id": role,
-                    "required": False
+                    "required": True
                 } for role in roles
             ]
         }
@@ -192,15 +192,35 @@ class DemoKeycloakClient:
             print("Response: " + str(response))
 
     def create_user(self, username, password, realm_roles) -> str:
+        if realm_roles is None:
+            realm_roles = []
+        if not isinstance(realm_roles, list):
+            realm_roles = [realm_roles]
         payload = {
             "username": username,
-            "realmRoles": realm_roles,
             "enabled": True
         }
+        print('Registering user: ' + json.dumps(payload, indent=2))
         user_id = self.keycloak_admin.create_user(payload, exist_ok=True)
         print('Created user: ' + str(user_id))
+        print("Changing password for user: " + str(user_id))
         self.keycloak_admin.set_user_password(user_id, password, temporary=False)
+        if realm_roles:
+            self.assign_realm_roles_to_user(user_id, realm_roles)
         return user_id
+
+    def assign_realm_roles_to_user(self, user_id: str, roles: [str]):
+        if not isinstance(roles, list):
+            roles = [roles]
+        for r in roles:
+            created_role = self.create_realm_role(r)
+            print("Created realm role: " + str(created_role))
+        all_roles = self.keycloak_admin.get_realm_roles(brief_representation=False)
+        realm_roles = list(filter(lambda role: role.get('name') in roles, all_roles))
+        if not realm_roles:
+            print("Realm roles " + str(roles) + " do no exist on realm " + self.realm)
+        print('Assigning roles to user ' + user_id + ':\n' + json.dumps(realm_roles, indent=2))
+        self.keycloak_admin.assign_realm_roles(user_id=user_id, roles=[realm_roles])
 
     def get_user_token(self, username="", password=""):
         """Gets a user token using username/password authentication.

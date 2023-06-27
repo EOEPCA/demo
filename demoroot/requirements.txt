@@ -16,3 +16,4 @@ rauth==0.7.3
 robotframework==3.2.2
 tifffile==2021.4.8
 WellKnownHandler==0.2.0
+python-keycloak==3.2.0
