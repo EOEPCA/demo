@@ -13,7 +13,7 @@ services:
     volumes:
     - ${PWD}/demoroot:/home/${PUSER}/work
     - ${PWD}/kubeconfig:/home/${PUSER}/.kube/config
-    - ${DEPLOYMENT_GUIDE_ROOT}:/home/${PUSER}/deployment-guide
+    - ${DEPLOYMENT_GUIDE_ROOT}/Users/${PUSER}/EOEPCA/deployment-guide
     # START (make permissions work)
     environment:
       NB_USER: "${PUSER}"

@@ -4,3 +4,4 @@ __pycache__/
 demoroot/notebooks/s-expression.xml
 demoroot/notebooks/*.png
 .idea
+.DS_Store

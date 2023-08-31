@@ -33,3 +33,56 @@ Use the commandline arg to mount the local notebook files into the running conta
 ```console
 docker-compose -f docker-compose-dev.yml up
 ```
+
+## How to develop on Apple M1 and M2 ARM chips
+
+**Step 1**
+
+Install and run the tonistiigi/binfmt emulator for different architectures with this Docker image:
+
+```sh
+docker run --privileged --rm tonistiigi/binfmt --install all
+```
+
+More information about this image can be found at [tonistiigi Docker hub](https://hub.docker.com/r/tonistiigi/binfmt).
+
+**Step 2**
+
+Adjust the docker-compose-dev.yml volume paths to match your system
+
+For example:
+
+```yml
+    volumes:
+    - ${PWD}/demoroot:/home/${PUSER}/work
+    - ${PWD}/kubeconfig:/home/${PUSER}/.kube/config
+    - ${DEPLOYMENT_GUIDE_ROOT}/Users/${PUSER}/EOEPCA/deployment-guide
+```
+
+**Step 3**
+
+Run the following command to start the Jupyterlab:
+
+```sh
+PUSER=username PUID=userID PGID=groupID docker-compose -f docker-compose-dev.yml up
+```
+
+To obtain the correct values open the terminal and user the following commands:
+
+**PUSER:**
+
+```sh
+whoami
+```
+
+**PUID:**
+
+```sh
+id -u
+```
+
+**PGID:**
+
+```sh
+id -g
+```
