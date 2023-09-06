@@ -1,6 +1,6 @@
 {
     "inputs": {
-        "input_reference":  "https://resource-catalogue.demo.eoepca.org/csw/?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&recordids=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFH_20200902T113910.SAFE",
+        "input_reference":  "https://resource-catalogue.c2023082201.eoepca.rconway.uk/csw/?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&recordids=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFH_20200902T113910.SAFE",
         "cbn": "ndvi",
         "s_expression": "(/ (- nir red) (+ nir red))"
     },
