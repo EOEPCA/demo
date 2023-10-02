@@ -11,7 +11,7 @@ matplotlib==3.7.1
 OWSLib==0.29.2
 pycrypto==2.6.1
 pyjwkest==1.4.2
-pystac-client==0.5.1
+pystac-client==0.6.1
 rauth==0.7.3
 robotframework==3.2.2
 tifffile==2021.4.8
