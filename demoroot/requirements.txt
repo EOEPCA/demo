@@ -1,3 +1,4 @@
+identityutils @ git+https://github.com/eoepca/um-identity-service@v1.0.1
 awscli==1.19.53
 boto3==1.17.53
 bs4==0.0.1
