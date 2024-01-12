@@ -259,7 +259,7 @@ class DemoKeycloakClient:
             {"resource_id": resource} for resource in resources
         ]
         data = self.keycloak_uma.connection.raw_post(
-            f"https://keycloak.develop.eoepca.org/realms/{self.realm}/authz/protection/permission",
+            f"{self.server_url}/realms/{self.realm}/authz/protection/permission",
             data=json.dumps(payload)
         )
         return raise_error_from_response(data, KeycloakPostError)
