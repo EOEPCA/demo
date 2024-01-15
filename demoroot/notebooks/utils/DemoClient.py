@@ -72,8 +72,8 @@ class DemoClient:
     #---------------------------------------------------------------------------
 
     def get_token_endpoint(self):
-
         """Get the URL of the token endpoint.
+
         Requires no authentication.
         """
         if self.token_endpoint == None:
