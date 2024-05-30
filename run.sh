@@ -16,7 +16,7 @@ function onExit() {
 
 trap "onExit" EXIT
 
-export DEPLOYMENT_GUIDE_ROOT="${DEPLOYMENT_GUIDE_ROOT:-${HOME}/deployment-guide}"
+export DEPLOYMENT_GUIDE_ROOT="${DEPLOYMENT_GUIDE_ROOT:-${HOME}/deployments/deployment-guide}"
 
 kubectl config view --flatten --minify >kubeconfig
 chmod 600 kubeconfig

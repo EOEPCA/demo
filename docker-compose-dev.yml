@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   jupyterlab:
     container_name: jupyterlab
@@ -8,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: eoepca/jupyterlab
+    networks:
+      - eoepca
     ports:
     - "8888:8888"
     volumes:
@@ -25,3 +25,7 @@ services:
     working_dir: "/home/${PUSER}/work"
     # END (make permissions work)
     command: ["start-notebook.sh", "--NotebookApp.token=''" ]
+
+networks:
+  eoepca:
+    external: true
