@@ -6,10 +6,11 @@ eoepca-scim==2.8.1
 folium==0.12.1
 geolinks==0.2.0
 ipyleaflet==0.17.1
-jsonschema==3.2.0
-lxml==4.6.3
+jsonschema==4.22.0
+lxml==5.2.2
 matplotlib==3.7.1
 OWSLib==0.29.2
+PyYAML==5.3.1
 pycrypto==2.6.1
 pyjwkest==1.4.2
 pystac-client==0.6.1
