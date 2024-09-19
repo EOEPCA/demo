@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/base-notebook:lab-4.2.3
+FROM quay.io/jupyter/base-notebook:lab-4.2.5
 
 # Kubernetes support files
 USER root
