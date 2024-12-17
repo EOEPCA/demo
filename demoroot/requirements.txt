@@ -10,7 +10,7 @@ ipyleaflet==0.17.4
 jsonschema==4.22.0
 lxml==5.2.2
 matplotlib==3.8.0
-OWSLib==0.29.2
+OWSLib==0.32.0
 PyYAML==5.3.1
 pyjwkest==1.4.2
 pystac-client==0.8.5
