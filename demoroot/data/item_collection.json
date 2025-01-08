@@ -1,0 +1,90 @@
+{
+    "type": "FeatureCollection",
+    "features": [{
+        "id": "20201211_223832_CS2",
+        "stac_version": "1.0.0",
+        "type": "Feature",
+        "geometry": null,
+        "properties": {
+            "datetime": "2020-12-11T22:38:32.125000Z"
+        },
+        "collection": "simple-collection",
+        "links": [{
+            "rel": "collection",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }, {
+            "rel": "root",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }, {
+            "rel": "parent",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }],
+        "assets": {
+            "visual": {
+                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.tif",
+                "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+                "title": "3-Band Visual",
+                "roles": [
+                    "visual"
+                ]
+            },
+            "thumbnail": {
+                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",
+                "title": "Thumbnail",
+                "type": "image/jpeg",
+                "roles": [
+                    "thumbnail"
+                ]
+            }
+        }
+    }, {
+        "id": "20201212_223832_CS2",
+        "stac_version": "1.0.0",
+        "type": "Feature",
+        "geometry": null,
+        "properties": {
+            "datetime": "2020-12-12T22:38:32.125000Z"
+        },
+        "collection": "simple-collection",
+        "links": [{
+            "rel": "collection",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }, {
+            "rel": "root",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }, {
+            "rel": "parent",
+            "href": "./collection.json",
+            "type": "application/json",
+            "title": "Simple Example Collection"
+        }],
+        "assets": {
+            "visual": {
+                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.tif",
+                "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+                "title": "3-Band Visual",
+                "roles": [
+                    "visual"
+                ]
+            },
+            "thumbnail": {
+                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",
+                "title": "Thumbnail",
+                "type": "image/jpeg",
+                "roles": [
+                    "thumbnail"
+                ]
+            }
+        }
+    }]
+}
