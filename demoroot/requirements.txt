@@ -20,3 +20,4 @@ tifffile==2023.9.26
 WellKnownHandler==0.2.0
 python-keycloak==3.2.0
 rasterio==1.4.1
+PyJWT==2.10.1
