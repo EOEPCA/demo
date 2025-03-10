@@ -10,7 +10,6 @@ services:
     - "8888:8888"
     volumes:
     - ${PWD}/demoroot:/home/${PUSER}/work
-    - ${PWD}/kubeconfig:/home/${PUSER}/.kube/config
     # START (make permissions work)
     environment:
       NB_USER: "${PUSER}"
