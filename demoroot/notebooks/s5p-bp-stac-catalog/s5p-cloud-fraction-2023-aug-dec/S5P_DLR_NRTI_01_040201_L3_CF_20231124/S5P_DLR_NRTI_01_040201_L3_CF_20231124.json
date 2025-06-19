@@ -1,0 +1,218 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/datacube/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/eo/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.0.0/schema.json"
+  ],
+  "id": "S5P_DLR_NRTI_01_040201_L3_CF_20231124",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -180,
+          -90
+        ],
+        [
+          180,
+          -90
+        ],
+        [
+          180,
+          90
+        ],
+        [
+          -180,
+          90
+        ],
+        [
+          -180,
+          -90
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -180.0,
+    -90.0,
+    180.0,
+    90.0
+  ],
+  "properties": {
+    "created": "2023-11-24T04:01:09.529+00:00",
+    "updated": "2025-04-03T16:28:37.237+00:00",
+    "datetime": "2023-09-07T12:12:52.342500Z",
+    "start_datetime": "2023-11-23T23:04:36.500000Z",
+    "end_datetime": "2023-11-25T00:26:33.814000Z",
+    "platform": "Sentinel 5 Precursor",
+    "constellation": "Sentinel-5P",
+    "instruments": [
+      "TROPOMI"
+    ],
+    "license": "CC-BY-4.0",
+    "sci:doi": "10.xxxx/xxxxxx",
+    "processing:facility": "Remote Sensing Technology Institute (IMF)",
+    "processing:level": "L3",
+    "processing:software": {
+      "UMAS": "4.2.1"
+    },
+    "product:type": "NRTI",
+    "proj:bbox": [
+      -180.0,
+      -90.0,
+      180.0,
+      90.0
+    ],
+    "proj:shape": [
+      350,
+      400
+    ],
+    "s5p:collection_identifier": "01",
+    "s5p:datasource": "Sentinel-5P, TROPOMI, space-borne remote sensing",
+    "s5p:head_facility": "German Aerospace Center (DLR)",
+    "s5p:l2_algorithm_version": "UPAS-CLOUD-ROCINN-4.1.0",
+    "s5p:product_name": "cf",
+    "s5p:spatial_resolution": "5.5 x 3.5 km2",
+    "proj:code": "EPSG:4326",
+    "proj:epsg": 4326,
+    "proj:transform": [
+      0.09999999999999964,
+      0.0,
+      -9.95,
+      0.0,
+      -0.09999999999999432,
+      35.050000000000004
+    ],
+    "cube:dimensions": {
+      "x": {
+        "type": "spatial",
+        "axis": "x",
+        "extent": [
+          -9.95,
+          29.950000000000006
+        ]
+      },
+      "y": {
+        "type": "spatial",
+        "axis": "y",
+        "extent": [
+          35.050000000000004,
+          69.95
+        ]
+      },
+      "t": {
+        "type": "temporal",
+        "extent": [
+          "2023-09-07T12:12:52.342500000",
+          "2023-09-07T12:12:52.342500000"
+        ]
+      }
+    }
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json"
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/11/24/S5P_DLR_NRTI_01_040201_L3_CF_20231124/S5P_DLR_NRTI_01_040201_L3_CF_20231124.nc",
+      "type": "application/netcdf",
+      "title": "Metadata",
+      "description": "Original S5P \"CF\" NetCDF File. Can also be loaded as data file and contains important metadata information.",
+      "roles": [
+        "metadata",
+        "data"
+      ]
+    },
+    "overview": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/11/24/S5P_DLR_NRTI_01_040201_L3_CF_20231124/S5P_DLR_NRTI_01_040201_L3_CF_20231124_overview.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Overview",
+      "description": "Full-resolution overview as Cloud-Optimized GeoTiff of the \"radiometric_cloud_fraction\" variable.",
+      "roles": [
+        "overview"
+      ]
+    },
+    "cf": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/11/24/S5P_DLR_NRTI_01_040201_L3_CF_20231124/S5P_DLR_NRTI_01_040201_L3_CF_20231124_cf.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "CF",
+      "description": "TROPOMI/S5P L3 data of radiometric cloud fraction with a global coverage and a 5.5 x 3.5 km2 spatial resolution.",
+      "raster:bands": [
+        {
+          "data_type": "float32",
+          "scale": 1.0,
+          "offset": 0.0,
+          "sampling": "area",
+          "nodata": 9.969209968386869e+36,
+          "unit": "1",
+          "statistics": {
+            "mean": 0.44895950061837636,
+            "minimum": -0.07517411559820175,
+            "maximum": 1.1302920579910278,
+            "stddev": 0.34359390754009067,
+            "valid_percent": 83.74271392822266
+          },
+          "histogram": {
+            "count": 11,
+            "min": -0.07517411559820175,
+            "max": 1.1302920579910278,
+            "buckets": [
+              63486,
+              62138,
+              48490,
+              49915,
+              45509,
+              32867,
+              27989,
+              29854,
+              74963,
+              3842
+            ]
+          }
+        }
+      ],
+      "proj:epsg": 4326,
+      "roles": [
+        "data"
+      ]
+    },
+    "thumbnail": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/11/24/S5P_DLR_NRTI_01_040201_L3_CF_20231124/S5P_DLR_NRTI_01_040201_L3_CF_20231124_thumbnail.png",
+      "type": "image/png",
+      "title": "Thumbnail",
+      "description": "Thumbnail of the \"radiometric_cloud_fraction\" variable.",
+      "roles": [
+        "thumbnail"
+      ]
+    },
+    "quicklook": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/11/24/S5P_DLR_NRTI_01_040201_L3_CF_20231124/S5P_DLR_NRTI_01_040201_L3_CF_20231124.png",
+      "type": "image/png",
+      "title": "Quicklook",
+      "description": "High-resolution quicklook of the \"radiometric_cloud_fraction\" variable.",
+      "roles": [
+        "quicklook"
+      ]
+    }
+  },
+  "collection": "s5p-cloud-fraction-2023-aug-dec"
+}
