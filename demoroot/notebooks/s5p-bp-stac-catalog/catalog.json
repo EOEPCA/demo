@@ -1,0 +1,18 @@
+{
+  "type": "Catalog",
+  "id": "s5p-bp-stac-catalog",
+  "stac_version": "1.1.0",
+  "description": "Root catalog",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "child",
+      "href": "./s5p-bp-cloud-fraction-2023-aug-dec/collection.json",
+      "type": "application/json"
+    }
+  ]
+}
