@@ -781,34 +781,36 @@
     }
   ],
   "stac_extensions": [
+    "https://stac-extensions.github.io/authentication/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/classification/v2.0.0/schema.json",
     "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
-    "https://stac-extensions.github.io/datacube/v1.0.0/schema.json",
     "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/eo/v1.1.0/schema.json"
+    "https://stac-extensions.github.io/eo/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v2.0.0/schema.json"
   ],
-  "cube:dimensions": {
-    "x": {
-      "type": "spatial",
-      "axis": "x",
-      "extent": [
-        -9.95,
-        29.950000000000006
-      ]
-    },
-    "y": {
-      "type": "spatial",
-      "axis": "y",
-      "extent": [
-        35.050000000000004,
-        69.95
-      ]
-    },
-    "t": {
-      "type": "temporal",
-      "extent": [
-        "2023-08-01T12:12:32.291500000",
-        "2023-12-31T10:50:06.376000000"
-      ]
+  "summaries": {
+    "eo:bands": [
+      {
+        "name": "cf",
+        "common_name": "cloud_fraction",
+        "description": "Radiometric cloud fraction (Sentinel-5P)",
+        "unit": "1"
+      }
+    ]
+  },
+  "auth:schemes": {
+    "none": {
+      "type": "none",
+      "description": "No authentication required"
+    }
+  },
+  "storage:schemes": {
+    "s3": {
+      "type": "s3",
+      "platform": "s3://unknown",
+      "description": "Example S3-compatible storage",
+      "region": "unknown",
+      "provider": "unknown"
     }
   },
   "extent": {
