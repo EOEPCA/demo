@@ -1,0 +1,260 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/product/v0.1.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/raster/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/authentication/v1.1.0/schema.json"
+  ],
+  "id": "S5P_OFFL_L3_NO2_TD_20231016_V200",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -9.95,
+          35.050000000000004
+        ],
+        [
+          29.950000000000006,
+          35.050000000000004
+        ],
+        [
+          29.950000000000006,
+          69.95
+        ],
+        [
+          -9.95,
+          69.95
+        ],
+        [
+          -9.95,
+          35.050000000000004
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -9.95,
+    35.050000000000004,
+    29.950000000000006,
+    69.95
+  ],
+  "properties": {
+    "title": "S5P_OFFL_L3_NO2_TD_20231016_V200",
+    "datetime": "2023-10-16T00:07:22Z",
+    "created": "2025-08-07T11:37:46.688305Z",
+    "updated": "2025-08-07T11:37:47.074263Z",
+    "start_datetime": "2023-10-16T00:07:22Z",
+    "end_datetime": "2023-10-16T23:48:14Z",
+    "providers": [
+      {
+        "name": "ESA",
+        "roles": [
+          "producer"
+        ],
+        "url": "https://earth.esa.int/"
+      },
+      {
+        "name": "VITO",
+        "roles": [
+          "processor",
+          "host"
+        ],
+        "url": "https://terrascope.be/"
+      }
+    ],
+    "platform": "sentinel-5p",
+    "instruments": [
+      "tropomi"
+    ],
+    "constellation": "sentinel-5p",
+    "gsd": 2200.0,
+    "product:type": "NO2_TD",
+    "processing:facility": "VITO",
+    "processing:datetime": "2023-10-28T07:48:03.770Z",
+    "processing:level": "L3",
+    "processing:version": "200",
+    "proj:code": "EPSG:4326",
+    "proj:geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -180.0,
+            -89.60000000000002
+          ],
+          [
+            180.0,
+            -89.60000000000002
+          ],
+          [
+            180.0,
+            89.6
+          ],
+          [
+            -180.0,
+            89.6
+          ],
+          [
+            -180.0,
+            -89.60000000000002
+          ]
+        ]
+      ]
+    },
+    "proj:bbox": [
+      -9.95,
+      35.050000000000004,
+      29.950000000000006,
+      69.95
+    ],
+    "proj:shape": [
+      350,
+      400
+    ],
+    "proj:transform": [
+      0.09999999999999964,
+      0.0,
+      -9.95,
+      0.0,
+      -0.09999999999999432,
+      35.050000000000004
+    ],
+    "processing:software": {
+      "Workflow": "2.0.0"
+    },
+    "auth:schemes": {
+      "oidc": {
+        "type": "openIdConnect",
+        "description": "Authenticate with Terrascope OpenID Connect",
+        "openIdConnectUrl": "https://sso.terrascope.be/auth/realms/terrascope/.well-known/openid-configuration"
+      }
+    },
+    "proj:epsg": 4326,
+    "cube:dimensions": {
+      "x": {
+        "type": "spatial",
+        "axis": "x",
+        "extent": [
+          -9.95,
+          29.950000000000006
+        ]
+      },
+      "y": {
+        "type": "spatial",
+        "axis": "y",
+        "extent": [
+          35.050000000000004,
+          69.95
+        ]
+      },
+      "t": {
+        "type": "temporal",
+        "extent": [
+          "2023-10-16T00:07:22.000000000",
+          "2023-10-16T00:07:22.000000000"
+        ]
+      }
+    }
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-5P Level-3 NO2 Daily Product - V2"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-5P Level-3 NO2 Daily Product - V2"
+    }
+  ],
+  "assets": {
+    "NO2": {
+      "href": "https://services.terrascope.be/download/Sentinel5P/L3_NO2_TD_V2/2023/10/S5P_OFFL_L3_NO2_TD_20231016_V200/S5P_NO2_TD_20231016_NO2_V200.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "NO2",
+      "description": "Tropospheric vertical column of nitrogen dioxide [\u00b5mol m^-2] based on Sentinel-5P/TROPOMI Level-2 OFFL data.",
+      "file:size": 127686350,
+      "updated": "2023-10-28T07:47:51.448190Z",
+      "data_type": "int16",
+      "raster:scale": 0.01,
+      "raster:offset": 0.0,
+      "raster:sampling": "area",
+      "nodata": 32767.0,
+      "bands": [
+        {
+          "name": "NO2"
+        }
+      ],
+      "alternate": {
+        "local": {
+          "href": "file:///data/MTDA/TERRASCOPE_Sentinel5P/L3_NO2_TD_V2/2023/10/S5P_OFFL_L3_NO2_TD_20231016_V200/S5P_NO2_TD_20231016_NO2_V200.tif"
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "NO2_WEIGHT": {
+      "href": "https://services.terrascope.be/download/Sentinel5P/L3_NO2_TD_V2/2023/10/S5P_OFFL_L3_NO2_TD_20231016_V200/S5P_NO2_TD_20231016_WEIGHT_V200.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "NO2_WEIGHT",
+      "description": "weighting factors used for spatial binning based on Sentinel-5P/TROPOMI Level-2 OFFL data.",
+      "file:size": 8431064,
+      "updated": "2023-10-28T07:47:51.647198Z",
+      "data_type": "int16",
+      "raster:scale": 1.0,
+      "raster:offset": 0.0,
+      "raster:sampling": "area",
+      "nodata": -9999.0,
+      "bands": [
+        {
+          "name": "NO2_WEIGHT"
+        }
+      ],
+      "alternate": {
+        "local": {
+          "href": "file:///data/MTDA/TERRASCOPE_Sentinel5P/L3_NO2_TD_V2/2023/10/S5P_OFFL_L3_NO2_TD_20231016_V200/S5P_NO2_TD_20231016_WEIGHT_V200.tif"
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "preview": {
+      "href": "https://titiler.terrascope.be/collections/terrascope-s5p-l3-no2-td-v2/items/S5P_OFFL_L3_NO2_TD_20231016_V200/preview?assets=NO2&format=png&max_size=256&colormap_name=s5p_no2_td&rescale=0,30000",
+      "type": "image/png",
+      "title": "Preview",
+      "description": "Preview image",
+      "proj:shape": [
+        128,
+        256
+      ],
+      "proj:code": null,
+      "roles": [
+        "thumbnail",
+        "overview"
+      ]
+    }
+  },
+  "collection": "terrascope-s5p-l3-no2-td-v2"
+}
