@@ -1,0 +1,3 @@
+openeo[localprocessing]
+jwt
+boto3
