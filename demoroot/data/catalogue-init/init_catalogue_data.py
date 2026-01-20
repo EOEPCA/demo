@@ -3,7 +3,7 @@ import requests
 from owslib.ogcapi.records import Records
 
 base_domain = "develop.eoepca.org"
-system_catalogue_endpoint = f'https://resource-catalogue.{base_domain}'
+system_catalogue_endpoint = f'https://resource-catalogue-protected.{base_domain}'
 collection_id = 'metadata:main'
 r = Records(system_catalogue_endpoint)
 cat = r.collection(collection_id)
@@ -13,7 +13,10 @@ record_data = './collections/sentinel-2-l2a.json'
 with open(record_data) as fh:
     data = json.load(fh)
 collection_identifier = data['id']
-r.collection_item_create(collection_id, data)
+try:
+    r.collection_item_create(collection_id, data)
+except:
+    pass
 
 # Import Sentinel 2 L2A items
 stac_items = ["S2A_34SEG_20240721_0_L2A",
@@ -34,7 +37,10 @@ for item in stac_items:
     with open(stac_data) as sf:
         si = json.load(sf)
     identifier = si['id']
-    r.collection_item_create(collection_id, si)
+    try:
+        r.collection_item_create(collection_id, si)
+    except:
+        pass
 
 # Delete Sentinel 2 L2A items
 # for item in stac_items:
@@ -48,7 +54,10 @@ record_data = './collections/S2MSI2A.json'
 with open(record_data) as fh:
     data = json.load(fh)
 collection_identifier = data['id']
-r.collection_item_create(collection_id, data)
+try:
+    r.collection_item_create(collection_id, data)
+except:
+    pass
 
 # Import S2MSI2A items
 stac_items = ["S2B_MSIL2A_20190910T095029_N0213_R079_T33TWN_20190910T124513.SAFE",
@@ -68,14 +77,20 @@ for item in stac_items:
     with open(stac_data) as sf:
         si = json.load(sf)
     identifier = si['id']
-    r.collection_item_create(collection_id, si)
+    try:
+        r.collection_item_create(collection_id, si)
+    except:
+        pass
 
 # Create S2MSI2C collection
 record_data = './collections/S2MSI2C.json'
 with open(record_data) as fh:
     data = json.load(fh)
 collection_identifier = data['id']
-r.collection_item_create(collection_id, data)
+try:
+    r.collection_item_create(collection_id, data)
+except:
+    pass
 
 # Import S2MSI2A items
 stac_items = ["S2B_MSIL1C_20190910T095029_N0208_R079_T33TWN_20190910T120910.SAFE",
@@ -96,4 +111,7 @@ for item in stac_items:
     with open(stac_data) as sf:
         si = json.load(sf)
     identifier = si['id']
-    r.collection_item_create(collection_id, si)
+    try:
+        r.collection_item_create(collection_id, si)
+    except:
+        pass
