@@ -1,0 +1,126 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.1.0/schema.json"
+  ],
+  "id": "S5P_DLR_OFFL_01_L3_CF_20230818",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -10.0,
+          35.0
+        ],
+        [
+          -10.0,
+          70.0
+        ],
+        [
+          30.0,
+          70.0
+        ],
+        [
+          30.0,
+          35.0
+        ],
+        [
+          -10.0,
+          35.0
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -10.0,
+    35.0,
+    30.0,
+    70.0
+  ],
+  "properties": {
+    "created": "2025-03-30T22:40:14.517+00:00",
+    "updated": "2026-01-19T16:40:45.725023+00:00",
+    "datetime": "2023-08-18T12:07:26.777500Z",
+    "start_datetime": "2023-08-18T00:41:37.070000Z",
+    "end_datetime": "2023-08-18T23:33:16.485000Z",
+    "platform": "Sentinel 5 Precursor",
+    "constellation": "Sentinel-5P",
+    "instruments": [
+      "TROPOMI"
+    ],
+    "license": "CC-BY-4.0",
+    "proj:epsg": 4326,
+    "sci:doi": "10.15489/hb5a78qt8z39",
+    "processing:facility": "Remote Sensing Technology Institute (IMF)",
+    "processing:level": "L3",
+    "processing:software": {
+      "UMAS": "4.5.1"
+    },
+    "product:type": "OFFL",
+    "proj:bbox": [
+      -10.0,
+      35.0,
+      30.0,
+      70.0
+    ],
+    "proj:shape": [
+      350,
+      400
+    ],
+    "s5p:collection_identifier": "01",
+    "s5p:datasource": "Sentinel-5P, TROPOMI, space-borne remote sensing",
+    "s5p:head_facility": "German Aerospace Center (DLR)",
+    "s5p:l2_algorithm_version": "UPAS-CLOUD-ROCINN-4.1.0",
+    "s5p:product_name": "cf",
+    "s5p:spatial_resolution": "5.5 x 3.5 km2"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "S5P Cloud Fraction STAC Catalog"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-5P Cloud Fraction"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-5P Cloud Fraction"
+    }
+  ],
+  "assets": {
+    "cf": {
+      "href": "https://download.geoservice.dlr.de/S5P_TROPOMI/files/L3/2023/08/18/S5P_DLR_OFFL_01_L3_CF_20230818/S5P_DLR_OFFL_01_L3_CF_20230818_cf.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "CF",
+      "description": "TROPOMI/S5P L3 data of radiometric cloud fraction with a global coverage and a 5.5 x 3.5 km2 spatial resolution.",
+      "proj:epsg": 4326,
+      "proj:shape": [
+        350,
+        400
+      ],
+      "proj:transform": [
+        0.1,
+        0.0,
+        -10.0,
+        0.0,
+        -0.1,
+        70.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "collection": "s5p-cf-bp"
+}

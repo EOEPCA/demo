@@ -6,3 +6,4 @@ demoroot/notebooks/*.png
 .idea
 .venv
 demoroot/notebooks/*.yaml
+.env

@@ -1,0 +1,21 @@
+{
+  "type": "Catalog",
+  "id": "s5p-cf-bp-stac-catalog",
+  "stac_version": "1.0.0",
+  "description": "Root catalog for S5P Cloud Fraction.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "S5P Cloud Fraction STAC Catalog"
+    },
+    {
+      "rel": "child",
+      "href": "./s5p-cf-bp/collection.json",
+      "type": "application/json",
+      "title": "Sentinel-5P Cloud Fraction"
+    }
+  ],
+  "title": "S5P Cloud Fraction STAC Catalog"
+}
