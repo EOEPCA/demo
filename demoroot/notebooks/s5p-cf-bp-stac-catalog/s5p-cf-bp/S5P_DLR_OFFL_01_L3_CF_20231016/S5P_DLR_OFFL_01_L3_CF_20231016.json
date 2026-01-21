@@ -1,8 +1,8 @@
 {
   "type": "Feature",
-  "stac_version": "1.0.0",
+  "stac_version": "1.1.0",
   "stac_extensions": [
-    "https://stac-extensions.github.io/projection/v1.1.0/schema.json"
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json"
   ],
   "id": "S5P_DLR_OFFL_01_L3_CF_20231016",
   "geometry": {
@@ -40,7 +40,7 @@
   ],
   "properties": {
     "created": "2025-03-30T23:27:45.416+00:00",
-    "updated": "2026-01-19T16:40:45.725023+00:00",
+    "updated": "2026-01-21T14:43:53.414331+00:00",
     "datetime": "2023-10-16T12:48:35.110500Z",
     "start_datetime": "2023-10-16T00:28:57.236000Z",
     "end_datetime": "2023-10-17T01:08:12.985000Z",
@@ -50,7 +50,6 @@
       "TROPOMI"
     ],
     "license": "CC-BY-4.0",
-    "proj:epsg": 4326,
     "sci:doi": "10.15489/hb5a78qt8z39",
     "processing:facility": "Remote Sensing Technology Institute (IMF)",
     "processing:level": "L3",
@@ -73,7 +72,8 @@
     "s5p:head_facility": "German Aerospace Center (DLR)",
     "s5p:l2_algorithm_version": "UPAS-CLOUD-ROCINN-4.1.0",
     "s5p:product_name": "cf",
-    "s5p:spatial_resolution": "5.5 x 3.5 km2"
+    "s5p:spatial_resolution": "5.5 x 3.5 km2",
+    "proj:code": "EPSG:4326"
   },
   "links": [
     {
@@ -101,7 +101,14 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "CF",
       "description": "TROPOMI/S5P L3 data of radiometric cloud fraction with a global coverage and a 5.5 x 3.5 km2 spatial resolution.",
-      "proj:epsg": 4326,
+      "bands": [
+        {
+          "name": "cf",
+          "description": "Radiometric cloud fraction (Sentinel-5P)",
+          "eo:common_name": "cloud_fraction"
+        }
+      ],
+      "proj:code": "EPSG:4326",
       "proj:shape": [
         350,
         400
