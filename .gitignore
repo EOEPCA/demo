@@ -3,6 +3,7 @@
 __pycache__/
 demoroot/notebooks/s-expression.xml
 demoroot/notebooks/*.png
+demoroot/notebooks/*.tif
 .idea
 .venv
 demoroot/notebooks/*.yaml
