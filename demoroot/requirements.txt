@@ -10,6 +10,7 @@ ipyleaflet==0.17.4
 jsonschema==4.25.1
 lxml==6.0.2
 matplotlib==3.10.0
+openeo>=0.28.0
 OWSLib==0.35.0
 PyYAML==6.0.3
 pyjwkest==1.4.2
@@ -25,3 +26,4 @@ kubernetes==32.0.1
 pyarrow==20.0.0
 fastparquet==2024.11.0
 stac-geoparquet==0.7.0
+ipython
