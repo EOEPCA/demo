@@ -31,3 +31,6 @@ odc-stac
 xarray<2025.01.2,>=0.12.3
 rioxarray
 dotenv
+eodag[usgs]==4.4.0
+requests
+json
