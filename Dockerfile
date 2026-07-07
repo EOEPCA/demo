@@ -3,7 +3,7 @@ FROM quay.io/jupyter/base-notebook:lab-4.5.1
 # Additional tooling
 USER root
 RUN apt-get update && \
-    apt-get install -y git
+    apt-get install -y git curl jq
 
 # Use the built-in user
 USER ${NB_USER}
