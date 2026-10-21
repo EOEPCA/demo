@@ -1,0 +1,186 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server-deployment
+  labels:
+    app: code-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-server
+  template:
+    metadata:
+      labels:
+        app: code-server
+    spec:
+      initContainers:
+      - name: init-file-on-volume
+        image: eoepca/pde-code-server:1.0.0
+        command:
+          - sh
+          - '-c'
+          - sh /opt/init/.init.sh
+        volumeMounts:
+          - name: workspace-volume
+            mountPath: /workspace
+          - name: init
+            mountPath: /opt/init/.init.sh
+            subPath: init
+        resources:
+          limits:
+            cpu: '2'
+            memory: '4Gi'
+          requests:
+            cpu: '2'
+            memory: '2Gi'
+        imagePullPolicy: IfNotPresent
+      containers:
+        - name: code-server
+          image: eoepca/pde-code-server:1.0.0
+          securityContext:
+            privileged: true
+          command: ["/bin/bash", "-c"]
+          args:
+            - >
+              code-server --auth none --bind-addr 0.0.0.0:8080 --user-data-dir /workspace /workspace/quickwin
+          ports:
+            - containerPort: 8080
+              name: web
+          volumeMounts:
+            - name: workspace-volume
+              mountPath: /workspace
+            - name: bash-login
+              mountPath: /workspace/.bash_login
+              subPath: bash-login
+            - name: bash-rc
+              mountPath: /workspace/.bashrc
+              subPath: bash-rc
+          env:
+          - name: XDG_CONFIG_HOME
+            value: /workspace/.local
+          - name: XDG_DATA_HOME
+            value: /workspace/.local/share/
+          - name: XDG_RUNTIME_DIR
+            value: /workspace/.local
+          - name: CWLTOOL_OPTIONS
+            value: "--podman"
+          - name: AWS_DEFAULT_REGION
+            value: "us-east-1"
+          - name: AWS_ACCESS_KEY_ID
+  value: "ws-example-1744089430"
+          - name: AWS_SECRET_ACCESS_KEY
+  value: "l0UMEsWrLATmVIpotkP0tLlcwSYMenJwqO3zEnJlS8cYawom9TsVOMrVXmRZkuIU"
+          resources:
+            limits:
+              cpu: '2'
+              memory: '6442450944'
+            requests:
+              cpu: '1'
+              memory: '4294967296'
+      volumes:
+        - name: workspace-volume
+          persistentVolumeClaim:
+            claimName: code-server-pvc
+        - name: init
+          configMap:
+            name: init
+            defaultMode: 420
+        - name: bash-login
+          configMap:
+            name: bash-login
+            defaultMode: 420
+        - name: bash-rc
+          configMap:
+            name: bash-rc
+            defaultMode: 420
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: code-server-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: managed-nfs-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-service
+spec:
+  selector:
+    app: code-server
+  ports:
+  - name: web
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init
+data:
+  init: >-
+    #!/bin/bash
+
+    set -x 
+
+    cd /workspace
+
+    git clone 'https://github.com/eoap/quickwin.git'
+
+    code-server --install-extension ms-python.python 
+
+    code-server --install-extension redhat.vscode-yaml
+    
+    code-server --install-extension sbg-rabix.benten-cwl
+    
+    code-server --install-extension ms-toolsai.jupyter
+
+    ln -s /workspace/.local/share/code-server/extensions /workspace/extensions
+
+    mkdir -p /workspace/User/
+    
+    echo '{"workbench.colorTheme": "Visual Studio Dark"}' > /workspace/User/settings.json
+
+    python -m venv /workspace/.venv
+    
+    source /workspace/.venv/bin/activate
+    
+    /workspace/.venv/bin/python -m pip install --no-cache-dir rasterio click pystac loguru pyproj shapely scikit-image pystac rio_stac ipykernel stactools[validate]
+    
+    /workspace/.venv/bin/python -m ipykernel install --user --name quickwin_env --display-name "Python (Quickwin)"
+    
+    export AWS_DEFAULT_REGION="us-east-1"
+
+    export AWS_ACCESS_KEY_ID="ws-example-1744089430"
+    
+    export AWS_SECRET_ACCESS_KEY="l0UMEsWrLATmVIpotkP0tLlcwSYMenJwqO3zEnJlS8cYawom9TsVOMrVXmRZkuIU"
+    
+    aws s3 mb s3://results --endpoint-url=l0UMEsWrLATmVIpotkP0tLlcwSYMenJwqO3zEnJlS8cYawom9TsVOMrVXmRZkuIU
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bash-rc
+data:
+  bash-rc: >-
+    alias ll="ls -l"
+
+    alias aws="aws --endpoint-url=l0UMEsWrLATmVIpotkP0tLlcwSYMenJwqO3zEnJlS8cYawom9TsVOMrVXmRZkuIU"
+
+    source /workspace/.venv/bin/activate    
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bash-login
+data:
+  bash-login: >-
+    source /workspace/.bashrc

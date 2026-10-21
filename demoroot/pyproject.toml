@@ -1,0 +1,21 @@
+[project]
+name = "eoepca-demoroot"
+version = "0.0.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "boto3",
+    "ipykernel",
+    "jupyterlab",
+    "numpy",
+    "pandas",
+    "pillow",
+    "pyarrow",
+    "PyJWT",
+    "python-dotenv",
+    "requests",
+    "shapely",
+    "stac-geoparquet",
+]
+
+[tool.uv]
+package = false
