@@ -17,7 +17,7 @@ from dotenv import dotenv_values
 # Only these fields can appear in notebook output.
 PUBLIC_KEYS = (
     "ENVIRONMENT", "OIDC_ISSUER", "EOAPI_CLIENT_ID", "WORKSPACE_CLIENT_ID",
-    "OIDC_SCOPE", "STAC_ENDPOINT", "WORKSPACE_API_ENDPOINT",
+    "OIDC_SCOPE", "STAC_ENDPOINT", "WORKSPACE_API_ENDPOINT", "WORKSPACE_DATA_DOMAIN",
 )
 
 
@@ -45,7 +45,7 @@ def load_config(path, service):
     config = {key: value or "" for key, value in config.items()}
     keys = {
         "eoapi": ("EOAPI_CLIENT_ID", "STAC_ENDPOINT"),
-        "workspace": ("WORKSPACE_CLIENT_ID", "WORKSPACE_API_ENDPOINT"),
+        "workspace": ("WORKSPACE_CLIENT_ID", "WORKSPACE_API_ENDPOINT", "WORKSPACE_DATA_DOMAIN"),
     }[service]
     for key in ("ENVIRONMENT", "OIDC_ISSUER", "OIDC_SCOPE", *keys):
         require_value(config, key)
@@ -129,6 +129,36 @@ class ApiSession(requests.Session):
         kwargs.setdefault("timeout", 30)
         kwargs["allow_redirects"] = False
         return super().request(method, url, **kwargs)
+
+
+def workspace_data_url(domain, workspace_name):
+    """Build the workspace's permanent Data URL."""
+    base = urlsplit(require_https(f"https://{domain}"))
+    if base.path or base.port:
+        raise ValueError("WORKSPACE_DATA_DOMAIN must be a hostname.")
+    if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", workspace_name):
+        raise ValueError("The workspace name must be a DNS label.")
+    return f"https://{workspace_name}.{base.hostname}"
+
+
+def wait_for_data(session, data_url, timeout=600, interval=10):
+    """Wait for the public Data route after storage is ready."""
+    deadline = time.monotonic() + timeout
+    print("Waiting for the Data endpoint...")
+    while time.monotonic() < deadline:
+        try:
+            response = session.get(f"{data_url}/share/public/", timeout=15,
+                                   allow_redirects=False)
+            if response.status_code == 200:
+                print("Data endpoint ready.")
+                return
+            # The gateway can redirect while the HTTPS route is still starting.
+            if response.status_code not in {301, 404, 502, 503, 504}:
+                raise RuntimeError(f"Data endpoint returned HTTP {response.status_code}.")
+        except (requests.ConnectionError, requests.Timeout):
+            pass
+        time.sleep(min(interval, max(0, deadline - time.monotonic())))
+    raise TimeoutError("Data endpoint did not become ready. Check its workload and route.")
 
 
 def expect_status(response, expected):
